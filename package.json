@@ -1,0 +1,17 @@
+{
+  "name": "igroot-edit-table",
+  "version": "0.0.2",
+  "description": "",
+  "main": "index.js",
+  "keywords": [
+    "igroot"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "igroot": "^0.3.5"
+  },
+  "devDependencies": {
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  }
+}
