@@ -1,2 +1,2 @@
 import Component from './src/'
-export default Compnent
+export default Component
