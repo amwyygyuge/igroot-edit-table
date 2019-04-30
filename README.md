@@ -11,7 +11,7 @@ yarn
 ```
 
 ## 预览地址
-https://playground-ewdzuaczyj.now.sh/
+https://playground-qguznsibkb.now.sh 
 
 ## 扩展的属性
 
