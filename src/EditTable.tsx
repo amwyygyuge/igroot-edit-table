@@ -8,7 +8,7 @@ interface EditRender<T> {
 	(text: any, record: T, index: number, onChange: onChange, formValue: formValue): React.ReactNode
 }
 interface EditColumnProps<T> extends ColumnProps<T> {
-	renderFrom?: EditRender<T>
+	renderForm?: EditRender<T>
 	initValue?: any
 }
 type formValue = any[] | undefined
@@ -44,8 +44,8 @@ function createHandleColumn<T>(formValue: formValue, onChange: onChange | undefi
 const resolveColumns: resolveColumns = function <T>(columns: EditColumnProps<T>[] | undefined, formValue: any[] | undefined, onChange: onChange | undefined) {
 	if (Array.isArray(columns)) {
 		return columns.map((item: EditColumnProps<T>) => {
-			const { key, dataIndex, renderFrom } = item
-			if (renderFrom) {
+			const { key, dataIndex, renderForm } = item
+			if (renderForm) {
 				const _dataIndex = dataIndex || key
 				const _render = (value: any, row: T, index: number) => {
 					const callBack = (cbValue: any) => {
@@ -58,7 +58,7 @@ const resolveColumns: resolveColumns = function <T>(columns: EditColumnProps<T>[
 							onChange && onChange(formValue)
 						}
 					}
-					const Node = renderFrom(value, row, index, callBack, formValue)
+					const Node = renderForm(value, row, index, callBack, formValue)
 					if (Node) {
 						return Node
 					}
@@ -105,6 +105,7 @@ function EditTable<T>(editTableProps: EditTableProps<T>) {
 	const initValue = createInitValue<T>(columns)
 	const AddButton = createAddButton(formValue, onChange, initValue)
 	if (!Array.isArray(formValue)) {
+		onChange && onChange([])
 		return <div>表单数据格式必须为数组。</div>
 	}
 	return <Table bordered size="small" title={() => AddButton} {...editTableProps} columns={[handleColumn, ..._columns]} dataSource={formValue} pagination={false} />

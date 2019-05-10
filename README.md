@@ -26,7 +26,7 @@ const columns: EditColumnProps<IUser>[] = [
 	{
 		title: "name",
 		dataIndex: "name",
-		renderFrom: (value, row, index, onChange, formValue) => <Input value={value} onChange={e => {
+		renderForm: (value, row, index, onChange, formValue) => <Input value={value} onChange={e => {
 			if (formValue) {
 				formValue[index].cname = "可编辑表格"
 			}
@@ -38,13 +38,13 @@ const columns: EditColumnProps<IUser>[] = [
 		title: "可受控的表单项目cname",
 		dataIndex: "cname",
 		initValue: "默认值",
-		renderFrom: (value, row, index, onChange) => <Input value={value} onChange={e => onChange(e.target.value)} />,
+		renderForm: (value, row, index, onChange) => <Input value={value} onChange={e => onChange(e.target.value)} />,
 	},
 	{
 		title: "下拉表单",
 		dataIndex: "options",
 		initValue: "2",
-		renderFrom: (value, row, index, onChange) => <Select value={value} onChange={onChange}>
+		renderForm: (value, row, index, onChange) => <Select value={value} onChange={onChange}>
 			<Select.Option key="1">第一</Select.Option>
 			<Select.Option key="2">第二</Select.Option>
 			<Select.Option key="3">第三</Select.Option>
@@ -56,7 +56,7 @@ const columns: EditColumnProps<IUser>[] = [
 	{
 		title: "日期控件",
 		dataIndex: "date",
-		renderFrom: (value, row, index, onChange) => <DatePicker value={value} onChange={onChange} />
+		renderForm: (value, row, index, onChange) => <DatePicker value={value} onChange={onChange} />
 	},
 	{
 		title: "根据表单项生成的展示数据showDate",
@@ -90,7 +90,7 @@ const columns: EditColumnProps<IUser>[] = [
 	{
 		title: "name",
 		dataIndex: "name",
-		renderFrom: (value, row, index, onChange, formValue) => <Input value={value} onChange={e => {
+		renderForm: (value, row, index, onChange, formValue) => <Input value={value} onChange={e => {
 			if (formValue) {
 				formValue[index].cname = "可编辑表格"
 			}
@@ -102,13 +102,13 @@ const columns: EditColumnProps<IUser>[] = [
 		title: "可受控的表单项目cname",
 		dataIndex: "cname",
 		initValue: "默认值",
-		renderFrom: (value, row, index, onChange) => <Input value={value} onChange={e => onChange(e.target.value)} />,
+		renderForm: (value, row, index, onChange) => <Input value={value} onChange={e => onChange(e.target.value)} />,
 	},
 	{
 		title: "下拉表单",
 		dataIndex: "options",
 		initValue: "2",
-		renderFrom: (value, row, index, onChange) => <Select value={value} onChange={onChange}>
+		renderForm: (value, row, index, onChange) => <Select value={value} onChange={onChange}>
 			<Select.Option key="1">第一</Select.Option>
 			<Select.Option key="2">第二</Select.Option>
 			<Select.Option key="3">第三</Select.Option>
@@ -120,7 +120,7 @@ const columns: EditColumnProps<IUser>[] = [
 	{
 		title: "日期控件",
 		dataIndex: "date",
-		renderFrom: (value, row, index, onChange) => <DatePicker value={value} onChange={onChange} />
+		renderForm: (value, row, index, onChange) => <DatePicker value={value} onChange={onChange} />
 	},
 	{
 		title: "根据表单项生成的展示数据showDate",
