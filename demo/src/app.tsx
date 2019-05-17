@@ -1,8 +1,8 @@
 import * as React from 'react'
-import EditTable, { EditColumnProps } from './../../src/'
+import EditTable, { IEditColumnProps } from './../../src/'
 import { Button, Card, Input, Form, Select, DatePicker } from 'igroot'
-import { FormComponentProps } from 'igroot/lib/form';
-import * as moment from 'moment';
+import { FormComponentProps } from 'igroot/lib/form'
+import * as moment from 'moment'
 import './index.less'
 interface IUser {
 	key: number
@@ -10,28 +10,33 @@ interface IUser {
 	cname: string
 	date: moment.Moment | undefined
 }
-const columns: EditColumnProps<IUser>[] = [
+
+const columns: IEditColumnProps<IUser>[] = [
 	{
-		title: "name",
-		dataIndex: "name",
-		renderForm: (value, row, index, onChange, formValue) => <Input value={value} onChange={e => {
-			if (formValue) {
-				formValue[index].cname = "可编辑表格"
+		title: 'name',
+		dataIndex: 'name',
+		width: 800,
+		renderForm: (value, row, index, onChange, formValue) =>
+			<Input value={value} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+				if (formValue) {
+					formValue[index].cname = '可编辑表格'
+				}
+				onChange(e.target.value)
 			}
-			onChange(e.target.value)
-		}
-		} />,
+			} />,
+	},
+
+	{
+		title: '可受控的表单项目cname',
+		dataIndex: 'cname',
+		initValue: '默认值',
+		renderForm: (value, row, index, onChange) =>
+			<Input value={value} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)} />,
 	},
 	{
-		title: "可受控的表单项目cname",
-		dataIndex: "cname",
-		initValue: "默认值",
-		renderForm: (value, row, index, onChange) => <Input value={value} onChange={e => onChange(e.target.value)} />,
-	},
-	{
-		title: "下拉表单",
-		dataIndex: "options",
-		initValue: "2",
+		title: '下拉表单',
+		dataIndex: 'options',
+		initValue: '2',
 		renderForm: (value, row, index, onChange) => <Select value={value} onChange={onChange}>
 			<Select.Option key="1">第一</Select.Option>
 			<Select.Option key="2">第二</Select.Option>
@@ -42,18 +47,18 @@ const columns: EditColumnProps<IUser>[] = [
 		</Select>
 	},
 	{
-		title: "日期控件",
-		dataIndex: "date",
+		title: '日期控件',
+		dataIndex: 'date',
 		renderForm: (value, row, index, onChange) => <DatePicker value={value} onChange={onChange} />
 	},
 	{
-		title: "根据表单项生成的展示数据showDate",
-		dataIndex: "showDate",
+		title: '根据表单项生成的展示数据showDate',
+		dataIndex: 'showDate',
 		render: (value, row) => {
 			if (row.date) {
 				return row.date.format()
 			} else {
-				return "暂未选择"
+				return '暂未选择'
 			}
 		}
 	},
@@ -62,25 +67,25 @@ const columns: EditColumnProps<IUser>[] = [
 class App extends React.Component<FormComponentProps> {
 	public test = () => {
 		const { getFieldsValue } = this.props.form
-		console.log(getFieldsValue());
+		console.log(getFieldsValue())
 	}
-	componentDidMount() {
+	public componentDidMount() {
 
 		const { setFieldsValue } = this.props.form
 		setFieldsValue({
 			demos: [
-				{ cname: "setFieldsValuesh设置的值", name: "igroot-edit-table" },
-				{ cname: "setFieldsValuesh设置的值", name: "igroot-edit-table" },
-				{ cname: "setFieldsValuesh设置的值", name: "igroot-edit-table" }
+				{ cname: 'setFieldsValuesh设置的值', name: 'igroot-edit-table' },
+				{ cname: 'setFieldsValuesh设置的值', name: 'igroot-edit-table' },
+				{ cname: 'setFieldsValuesh设置的值', name: 'igroot-edit-table' }
 			]
 		})
 	}
-	render() {
+	public render() {
 		const { getFieldDecorator } = this.props.form
 		return (
-			<Card title='可编辑表格示例'>
+			<Card title="可编辑表格示例">
 				<Form>
-					{getFieldDecorator("demos")(
+					{getFieldDecorator('demos')(
 						<EditTable<IUser>
 							columns={columns}
 						/>

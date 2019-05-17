@@ -1,118 +1,132 @@
 import * as  React from 'react'
 import { Table, Button } from 'igroot'
-import { TableProps, ColumnProps } from 'igroot/lib/table/';
-interface onChange {
-	(value: any): void
-}
-interface EditRender<T> {
-	(text: any, record: T, index: number, onChange: onChange, formValue: formValue): React.ReactNode
-}
-interface EditColumnProps<T> extends ColumnProps<T> {
-	renderForm?: EditRender<T>
+import { TableProps, ColumnProps } from 'igroot/lib/table/'
+type onChange = (value: any) => void
+type editRender<T> = (text: any, record: T, index: number, onChange: onChange, formValue: formValue) => React.ReactNode
+interface IEditColumnProps<T> extends ColumnProps<T> {
+	renderForm?: editRender<T>
 	initValue?: any
 }
 type formValue = any[] | undefined
-interface EditTableProps<T> extends TableProps<T> {
+
+interface IEditTableProps<T> extends TableProps<T> {
 	value?: formValue
 	onChange?: onChange
-	columns?: EditColumnProps<T>[];
+	columns?: IEditColumnProps<T>[]
 }
-interface resolveColumns {
-	<T>(columns: EditColumnProps<T>[] | undefined, value: formValue, onChange: onChange | undefined): EditColumnProps<T>[]
-}
-
-
-function createHandleColumn<T>(formValue: formValue, onChange: onChange | undefined): ColumnProps<T> {
+type IResolveColumns = <T>(
+	columns: IEditColumnProps<T>[] | undefined,
+	value: formValue,
+	onChange: onChange | undefined
+)
+	=> IEditColumnProps<T>[]
+function createHandleColumn<T>(IFormValue: formValue, change: onChange | undefined): ColumnProps<T> {
 	const handleRemove = (index: number) => {
-		if (formValue) {
-			formValue.splice(index, 1)
-			onChange && onChange(formValue)
+		if (IFormValue) {
+			IFormValue.splice(index, 1)
+			if (change) {
+				change(IFormValue)
+			}
 		}
 	}
 	const handleColumn = {
-		title: "操作",
-		dataIndex: "handle",
+		dataIndex: 'handle',
+		title: '操作',
 		width: 80,
 		render: (value: any, row: T, index: number) =>
-			<div style={{ textAlign: "center" }}>
+			<div style={{ textAlign: 'center' }}>
 				<Button type="danger" size="small" onClick={() => handleRemove(index)} >删除</Button>
 			</div>
 	}
 	return handleColumn
 }
 
-const resolveColumns: resolveColumns = function <T>(columns: EditColumnProps<T>[] | undefined, formValue: any[] | undefined, onChange: onChange | undefined) {
-	if (Array.isArray(columns)) {
-		return columns.map((item: EditColumnProps<T>) => {
-			const { key, dataIndex, renderForm } = item
-			if (renderForm) {
-				const _dataIndex = dataIndex || key
-				const _render = (value: any, row: T, index: number) => {
-					const callBack = (cbValue: any) => {
-						if (formValue) {
-							const data = formValue[index]
-							if (_dataIndex) {
-								data[_dataIndex] = cbValue
+const resolveColumns: IResolveColumns =
+	function <T>(
+		columns: IEditColumnProps<T>[] | undefined, IFormValue: any[] | undefined, change: onChange | undefined) {
+		if (Array.isArray(columns)) {
+			return columns.map((item: IEditColumnProps<T>) => {
+				const { key, dataIndex, renderForm } = item
+				if (renderForm) {
+					const DataIndex = dataIndex || key
+					const Render = (value: any, row: T, index: number) => {
+						const callBack = (cbValue: any) => {
+							if (IFormValue) {
+								const data = IFormValue[index]
+								if (DataIndex) {
+									data[DataIndex] = cbValue
+								}
+								IFormValue[index] = data
+								if (change) {
+									change(IFormValue)
+								}
 							}
-							formValue[index] = data
-							onChange && onChange(formValue)
+						}
+						const Node = renderForm(value, row, index, callBack, IFormValue)
+						if (Node) {
+							return Node
 						}
 					}
-					const Node = renderForm(value, row, index, callBack, formValue)
-					if (Node) {
-						return Node
-					}
+					item.render = Render
 				}
-				item.render = _render
-			}
-			return item
-		})
+				return item
+			})
+		}
+		return []
 	}
-	return []
-}
 
-const createAddButton = (formValue: formValue, onChange: onChange | undefined, initValue: any) => {
+const createAddButton = (IFormValue: formValue, change: onChange | undefined, initValue: any) => {
 	const handleAdd = () => {
-		const _initValue = JSON.parse(JSON.stringify(initValue))
-		if (formValue) {
-			formValue.push(_initValue)
-			onChange && onChange(formValue)
+		const InitValue = JSON.parse(JSON.stringify(initValue))
+		if (IFormValue) {
+			IFormValue.push(InitValue)
+			if (change) {
+				change(IFormValue)
+			}
 		} else {
-			onChange && onChange([_initValue])
+			if (change) {
+				change(IFormValue)
+			}
 		}
 	}
 	return <Button onClick={handleAdd}>新加列</Button>
 }
 
-function createInitValue<T>(columns: EditColumnProps<T>[] | undefined) {
-	const _initValue: any = {}
+function createInitValue<T>(columns: IEditColumnProps<T>[] | undefined) {
+	const InitValue: any = {}
 	if (columns) {
-		columns.forEach((item: EditColumnProps<T>) => {
+		columns.forEach((item: IEditColumnProps<T>) => {
 			const { key, dataIndex, initValue } = item
-			const _dataIndex = dataIndex || key
-			if (_dataIndex) {
-				_initValue[_dataIndex] = initValue ? initValue : undefined
+			const DataIndex = dataIndex || key
+			if (DataIndex) {
+				InitValue[DataIndex] = initValue ? initValue : undefined
 			}
-		});
+		})
 	}
-	return _initValue
+	return InitValue
 }
 
-function EditTable<T>(editTableProps: EditTableProps<T>) {
-	const { value: formValue, onChange, columns } = editTableProps
-	const _columns = resolveColumns<T>(columns, formValue, onChange)
-	const handleColumn = createHandleColumn<T>(formValue, onChange)
+function EditTable<T>(editTableProps: IEditTableProps<T>) {
+	const { value: FormValue, onChange: change, columns } = editTableProps
+	const Columns = resolveColumns<T>(columns, FormValue, change)
+	const handleColumn = createHandleColumn<T>(FormValue, change)
 	const initValue = createInitValue<T>(columns)
-	const AddButton = createAddButton(formValue, onChange, initValue)
-	if (!Array.isArray(formValue)) {
-		onChange && onChange([])
+	const AddButton = createAddButton(FormValue, change, initValue)
+	if (!Array.isArray(FormValue)) {
+		if (change) {
+			change([])
+		}
 		return <div>表单数据格式必须为数组。</div>
 	}
-	return <Table bordered size="small" title={() => AddButton} {...editTableProps} columns={[handleColumn, ..._columns]} dataSource={formValue} pagination={false} />
+	return <Table bordered size="small"
+		title={() => AddButton}
+		{...editTableProps}
+		columns={[handleColumn, ...Columns]}
+		dataSource={FormValue} pagination={false} />
 }
 
 export {
-	EditColumnProps
+	IEditColumnProps
 }
 
 export default EditTable
