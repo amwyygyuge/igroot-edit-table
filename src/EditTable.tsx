@@ -12,7 +12,8 @@ type formValue = any[] | undefined
 interface IEditTableProps<T> extends TableProps<T> {
 	value?: formValue
 	onChange?: onChange
-	columns?: IEditColumnProps<T>[]
+	columns?: IEditColumnProps<T>[],
+	disableEdit?: boolean
 }
 type IResolveColumns = <T>(
 	columns: IEditColumnProps<T>[] | undefined,
@@ -20,6 +21,7 @@ type IResolveColumns = <T>(
 	onChange: onChange | undefined
 )
 	=> IEditColumnProps<T>[]
+
 function createHandleColumn<T>(IFormValue: formValue, change: onChange | undefined): ColumnProps<T> {
 	const handleRemove = (index: number) => {
 		if (IFormValue) {
@@ -106,8 +108,8 @@ function createInitValue<T>(columns: IEditColumnProps<T>[] | undefined) {
 	return InitValue
 }
 
-function EditTable<T>(editTableProps: IEditTableProps<T>) {
-	const { value: FormValue, onChange: change, columns } = editTableProps
+const EditTable = function <T>(editTableProps: IEditTableProps<T>) {
+	const { value: FormValue, onChange: change, columns, disableEdit = false } = editTableProps
 	const Columns = resolveColumns<T>(columns, FormValue, change)
 	const handleColumn = createHandleColumn<T>(FormValue, change)
 	const initValue = createInitValue<T>(columns)
@@ -118,15 +120,16 @@ function EditTable<T>(editTableProps: IEditTableProps<T>) {
 		}
 		return <div>表单数据格式必须为数组。</div>
 	}
+	const RealColumns = disableEdit ? [...Columns] : [handleColumn, ...Columns]
+	const title = disableEdit ? undefined : () => AddButton
 	return <Table bordered size="small"
-		title={() => AddButton}
+		title={title}
 		{...editTableProps}
-		columns={[handleColumn, ...Columns]}
+		columns={RealColumns}
 		dataSource={FormValue} pagination={false} />
 }
 
 export {
 	IEditColumnProps
 }
-
 export default EditTable

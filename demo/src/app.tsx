@@ -88,6 +88,7 @@ class App extends React.Component<FormComponentProps> {
 					{getFieldDecorator('demos')(
 						<EditTable<IUser>
 							columns={columns}
+							disableEdit
 						/>
 					)}
 				</Form>

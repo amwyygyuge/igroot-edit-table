@@ -1,19 +1,17 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
-    ],
-    "jsRules": {},
-    "rules": {
-        "indent": [true, "tabs", 2],
-        "semicolon": [true, "never"],
-        "quotemark": [true, "single", "jsx-double"],
-        "ordered-imports":false,
-        "array-type": [true, "array"],
-        "trailing-comma":[false],
-        "object-literal-sort-keys":[false],
-        "only-arrow-functions":[false],
-        "no-console":[false]
-    },
-    "rulesDirectory": []
+	"defaultSeverity": "error",
+	"extends": [ "tslint:recommended" ],
+	"jsRules": {},
+	"rules": {
+		"indent": [ true, "tabs", 2 ],
+		"semicolon": [ true, "never" ],
+		"quotemark": [ true, "single", "jsx-double" ],
+		"ordered-imports": false,
+		"array-type": [ true, "array" ],
+		"trailing-comma": [ false ],
+		"object-literal-sort-keys": [ false ],
+		"only-arrow-functions": [ false ],
+		"no-console": [ false ]
+	},
+	"rulesDirectory": []
 }
